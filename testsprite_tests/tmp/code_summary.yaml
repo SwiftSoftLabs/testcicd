@@ -1,0 +1,236 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Next.js 16
+  - React 19
+  - Tailwind CSS 4
+  - InsForge SDK
+  - LiveKit
+  - Supabase SSR
+features:
+  - name: Marketing Homepage
+    description: Public landing page showcasing OneWork workspace features and project demos
+    files:
+      - src/app/page.tsx
+      - src/components/homepage/HomepageClient.tsx
+    endpoints:
+      - method: GET
+        path: /
+        description: Public marketing homepage
+        auth_required: false
+        response_schema:
+          "200": HTML page
+  - name: User Authentication
+    description: Email/password login, signup, passkey login, forgot password, and email verification
+    files:
+      - src/app/(auth)/login/page.tsx
+      - src/app/(auth)/login/login-form.tsx
+      - src/app/(auth)/signup/page.tsx
+      - src/app/(auth)/verify-email/page.tsx
+      - src/lib/auth/client-session.ts
+    endpoints:
+      - method: GET
+        path: /login
+        description: Login page with email/password and passkey options
+        auth_required: false
+        response_schema:
+          "200": HTML page
+      - method: GET
+        path: /signup
+        description: User registration page
+        auth_required: false
+        response_schema:
+          "200": HTML page
+      - method: GET
+        path: /verify-email
+        description: Email verification status page
+        auth_required: false
+        response_schema:
+          "200": HTML page
+    depends_on: []
+  - name: Dashboard
+    description: Authenticated workspace home with overview widgets and navigation
+    files:
+      - src/app/(dashboard)/dashboard/page.tsx
+      - src/components/Sidebar.tsx
+    endpoints:
+      - method: GET
+        path: /dashboard
+        description: Main authenticated dashboard
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Task Management
+    description: Kanban-style task boards with projects, sprints, subtasks, attachments, and shareable deep links
+    files:
+      - src/app/(dashboard)/tasks/page.tsx
+      - src/components/modals/TaskDetailModal.tsx
+      - src/hooks/useTaskDeepLinkUrlSync.ts
+      - src/lib/tasks/taskDeepLink.ts
+      - src/app/api/tasks/route.ts
+      - src/app/api/tasks/[id]/route.ts
+    endpoints:
+      - method: GET
+        path: /tasks
+        description: Task board with project selector and task cards
+        auth_required: true
+        response_schema:
+          "200": HTML page
+      - method: GET
+        path: /tasks?projectId={uuid}&open={taskUuid}
+        description: Deep link opens specific project and task detail modal
+        auth_required: true
+        response_schema:
+          "200": HTML page with task modal
+    depends_on:
+      - User Authentication
+  - name: Team Chat
+    description: Real-time messaging with threads, reactions, attachments, and user presence
+    files:
+      - src/app/(dashboard)/chat/page.tsx
+      - src/components/chat/ChatWindow.tsx
+      - src/components/chat/MessageItem.tsx
+      - src/app/api/chat/messages/route.ts
+    endpoints:
+      - method: GET
+        path: /chat
+        description: Team chat interface with conversations and message threads
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Video Calls
+    description: LiveKit-powered audio/video calls with AI meeting notes, recording, and transcription
+    files:
+      - src/app/(dashboard)/calls/page.tsx
+      - src/app/(dashboard)/calls/[id]/room/page.tsx
+      - src/components/calls/LiveKitCallRoom.tsx
+      - src/components/calls/ActiveCallShell.tsx
+      - src/app/api/calls/route.ts
+    endpoints:
+      - method: GET
+        path: /calls
+        description: Calls list and scheduling
+        auth_required: true
+        response_schema:
+          "200": HTML page
+      - method: GET
+        path: /calls/{id}/room
+        description: Active call room with LiveKit media controls
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Calendar
+    description: Calendar view with events synced from integrations
+    files:
+      - src/app/(dashboard)/calendar/page.tsx
+      - src/app/api/events/[id]/route.ts
+      - src/app/api/calendars/route.ts
+    endpoints:
+      - method: GET
+        path: /calendar
+        description: Calendar and events view
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Email
+    description: Integrated email inbox with compose, AI assistance, and OAuth account linking
+    files:
+      - src/app/(dashboard)/email/page.tsx
+      - src/app/(dashboard)/email/compose/page.tsx
+      - src/app/(dashboard)/email/[id]/page.tsx
+      - src/app/api/email/accounts/connect/route.ts
+    endpoints:
+      - method: GET
+        path: /email
+        description: Email inbox listing
+        auth_required: true
+        response_schema:
+          "200": HTML page
+      - method: GET
+        path: /email/compose
+        description: Compose new email
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Files
+    description: File storage with folders, uploads, and downloads
+    files:
+      - src/app/(dashboard)/files/page.tsx
+      - src/app/api/files/route.ts
+      - src/app/api/files/upload/route.ts
+    endpoints:
+      - method: GET
+        path: /files
+        description: File browser and upload interface
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Secrets Vault
+    description: Environment-scoped secret variables with reveal, audit, and CLI sync
+    files:
+      - src/app/(dashboard)/vault/page.tsx
+      - src/app/api/vault/variables/route.ts
+      - src/app/api/vault/summary/route.ts
+    endpoints:
+      - method: GET
+        path: /vault
+        description: Vault secrets management UI
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Settings
+    description: Workspace settings, profile, user management, billing, and security (2FA, passkeys)
+    files:
+      - src/app/(dashboard)/settings/page.tsx
+      - src/app/(dashboard)/settings/[slug]/page.tsx
+      - src/components/settings/ProfileSettings.tsx
+      - src/components/settings/UserManagementSettings.tsx
+    endpoints:
+      - method: GET
+        path: /settings
+        description: Workspace and profile settings
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+  - name: Notifications
+    description: In-app notification center with preferences and deep links to tasks/calls
+    files:
+      - src/app/(dashboard)/notifications/page.tsx
+      - src/lib/notifications.ts
+      - src/app/api/notifications/preferences/route.ts
+    endpoints:
+      - method: GET
+        path: /notifications
+        description: Notification inbox
+        auth_required: true
+        response_schema:
+          "200": HTML page
+    depends_on:
+      - User Authentication
+known_limitations:
+  - issue: Video calls require LiveKit server and microphone/camera permissions
+    location: src/components/calls/LiveKitCallRoom.tsx
+    impact: Call room tests may fail without media device access
+  - issue: Email and calendar features require OAuth provider configuration
+    location: src/app/api/email/oauth/
+    impact: Email/calendar integration flows cannot be fully tested without external OAuth setup
+  - issue: Task deep links depend on valid projectId and task UUID query params
+    location: src/lib/tasks/taskDeepLink.ts
+    impact: Deep link tests need seeded task data in the workspace

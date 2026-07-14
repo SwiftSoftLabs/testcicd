@@ -1,0 +1,8 @@
+# Replace with your hostname:
+#   - sslip.io (no DNS access): 5-78-232-172.sslip.io  (dots → dashes in IP)
+#   - DuckDNS: onework-livekit.duckdns.org
+#   - Your domain: livekit.calls.yourdomain.com
+5-78-232-172.sslip.io {
+  # LiveKit uses host network; Caddy runs in Docker — reach the host, not container localhost.
+  reverse_proxy host.docker.internal:7880
+}

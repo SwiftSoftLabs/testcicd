@@ -1,0 +1,5 @@
+{
+  "name": "DevFlow Pro",
+  "description": "A high-performance, unified workspace for developers and teams featuring task management, version control, chat, and email integration.",
+  "requestFramePermissions": ["microphone"]
+}

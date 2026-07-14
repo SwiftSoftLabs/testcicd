@@ -1,0 +1,15 @@
+[Unit]
+Description=OneWork LiveKit Python Agent (Whisper STT)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/onework/livekit-agent
+EnvironmentFile=/opt/onework/livekit-agent/.env
+ExecStart=/opt/onework/livekit-agent/.venv/bin/python agent.py start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+# OneWork Version Control — Gitea engine (internal; users see "OneWork Version Control" only)
+# Deploy on Hetzner VPS: /opt/onework-vc/docker-compose.yml
+
+services:
+  gitea:
+    image: gitea/gitea:1.22-rootless
+    restart: unless-stopped
+    environment:
+      - GITEA__server__DOMAIN=5.78.232.172
+      - GITEA__server__SSH_DOMAIN=5.78.232.172
+      - GITEA__server__ROOT_URL=http://5.78.232.172:3001/
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__SSH_PORT=2222
+      - GITEA__server__SSH_LISTEN_PORT=2222
+      - GITEA__server__DISABLE_SSH=false
+      - GITEA__server__START_SSH_SERVER=true
+      - GITEA__service__DISABLE_REGISTRATION=true
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=false
+      - GITEA__openid__ENABLE_OPENID_SIGNIN=false
+      - GITEA__openid__ENABLE_OPENID_SIGNUP=false
+    volumes:
+      - ./data:/var/lib/gitea
+      - ./config:/etc/gitea
+    ports:
+      - "3001:3000"
+      - "2222:2222"

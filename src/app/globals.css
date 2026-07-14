@@ -1,0 +1,1187 @@
+@import "tailwindcss";
+
+/* Match ThemeHandler: theme is html.light / html.dark, not prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+@theme {
+  /* Brand & semantic colors */
+  --color-primary: var(--accent-primary);
+  --color-blue-600: var(--accent-hover);
+  --color-background-dark: var(--bg-main);
+  --color-surface-dark: var(--bg-surface);
+  --color-surface-highlight: var(--bg-highlight);
+  --color-border-dark: var(--border-color);
+  --color-text-main: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-success: var(--status-success);
+  --color-danger: var(--status-danger);
+  --color-warning: var(--status-warning);
+  --color-sidebar-bg: var(--sidebar-bg);
+
+  /* Font families */
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Density-aware spacing base — all spacing utilities scale with --density-scale */
+  --spacing: calc(0.25rem * var(--density-scale));
+}
+
+:root {
+  /* One Work design system (DESIGN.md) */
+  --bg-base: #0b0f19;
+  --bg-sidebar: #111827;
+  --bg-surface: #151c2c;
+  --bg-surface-raised: #1c2539;
+  --bg-surface-overlay: #222d42;
+  --bg-input: #1a2332;
+  --text-tertiary: #64748b;
+  --text-inverse: #0b0f19;
+  --accent-primary: #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-muted: #1e3a5f;
+  --status-success: #22c55e;
+  --status-warning: #f59e0b;
+  --status-danger: #ef4444;
+  --status-info: #3b82f6;
+  --status-neutral: #8b5cf6;
+  --border-default: #1e293b;
+  --border-focus: #3b82f6;
+  --chart-blue: #3b82f6;
+  --chart-cyan: #06b6d4;
+  --chart-red: #ef4444;
+  --chart-green: #22c55e;
+  --chart-orange: #f59e0b;
+  --chart-purple: #8b5cf6;
+  --chart-teal: #14b8a6;
+
+  /* App aliases (dashboard + shared) */
+  --bg-main: var(--bg-base);
+  --bg-highlight: var(--bg-surface-raised);
+  --border-color: var(--border-default);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --sidebar-bg: var(--bg-sidebar);
+
+  /* Adaptive Text Color (White in Dark, Dark in Light) */
+  --text-adaptive-white: 255 255 255;
+  --border-adaptive-rgb: 255 255 255;
+  --surface-hover-rgb: 255 255 255;
+
+  /* Appearance transitions — synced with src/lib/appearance/motion.ts */
+  --appearance-duration: 0.45s;
+  --appearance-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Density Scale */
+  --density-scale: 1;
+
+  /* Typography — synced to html font-size by ThemeHandler */
+  --base-font-size: 16px;
+  --icon-size: calc(1.25rem * var(--density-scale));
+  --shell-sidebar-w: calc(18rem * var(--density-scale));
+
+  /* Swapped accent colors */
+  --color-blue-600: #3b82f6;
+}
+
+html.light {
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-highlight: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --sidebar-bg: #ffffff;
+
+  /* Flip pure white text to dark in light mode */
+  --text-adaptive-white: 15 23 42;
+  --border-adaptive-rgb: 15 23 42;
+  --surface-hover-rgb: 15 23 42;
+}
+
+html.light [data-quick-taskbar-panel] {
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+html.light [data-call-quick-action-label],
+html.light [data-call-quick-action-icon] {
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+html.light [data-call-quick-fab] {
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.28);
+}
+
+/* Exception: When background is primary, text should ALWAYS be white */
+.bg-primary {
+  --text-adaptive-white: 255 255 255 !important;
+}
+
+html.density-compact {
+  --density-scale: 0.75;
+}
+
+/* Dashboard header chrome (sidebar toggle, utility icons) */
+@property --density-scale {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --shell-header-density-factor {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --shell-header-type-factor {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+html {
+  --shell-header-density-factor: 1;
+  --shell-header-type-factor: 1;
+  --shell-header-icon-size: calc(
+    1.25rem * var(--shell-header-density-factor) * var(--shell-header-type-factor)
+  );
+  --shell-header-control-padding: calc(
+    0.5rem * var(--shell-header-density-factor)
+  );
+  --shell-header-height: calc(4rem * var(--shell-header-density-factor));
+  transition:
+    font-size var(--appearance-duration) var(--appearance-ease),
+    --density-scale var(--appearance-duration) var(--appearance-ease),
+    --shell-header-density-factor var(--appearance-duration) var(--appearance-ease),
+    --shell-header-type-factor var(--appearance-duration) var(--appearance-ease);
+}
+
+html.density-compact,
+html[data-density="compact"] {
+  --shell-header-density-factor: 0.9;
+}
+
+html[data-font-size="small"] {
+  --shell-header-type-factor: 1.15;
+}
+
+html[data-font-size="large"] {
+  --shell-header-type-factor: 1.1;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-size: inherit;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    font-size var(--appearance-duration) var(--appearance-ease);
+}
+
+/*
+ * Interactive cursor policy (unlayered + !important)
+ *
+ * Why: Tailwind v4 cursor-* utilities were overriding semantic affordances; these rules win.
+ *
+ * Covered: button, a[href], label[for], select, date/time inputs, checkbox/radio/submit inputs,
+ * [role="button"|menuitem|option|tab|link]. Child icons inherit pointer via * rules below.
+ *
+ * Not covered: div/span/li/td (etc.) with onClick — add cursor-pointer (or cursor-default /
+ * cursor-not-allowed when read-only) in JSX. See scripts/fix-clickable-cursors.mjs.
+ *
+ * Built-in exceptions on button / [role="button"]: .cursor-grab, .cursor-grabbing,
+ * .cursor-zoom-in, and opt-out utilities below (text, resize, move).
+ *
+ * Disabled: not-allowed on :disabled and [aria-disabled="true"].
+ *
+ * Overlays: use dismiss-backdrop (@utility) on click-to-close scrims.
+ */
+button:not(:disabled):not(.cursor-grab):not(.cursor-grabbing):not(.cursor-zoom-in):not(.cursor-text):not(.cursor-col-resize):not(.cursor-row-resize):not(.cursor-ew-resize):not(.cursor-ns-resize):not(.cursor-move),
+a[href],
+label[for],
+select:not(:disabled),
+input[type="date"]:not(:disabled),
+input[type="datetime-local"]:not(:disabled),
+input[type="time"]:not(:disabled),
+input[type="month"]:not(:disabled),
+input[type="week"]:not(:disabled),
+summary,
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled),
+input[type="button"]:not(:disabled),
+[role="button"]:not([aria-disabled="true"]):not(.cursor-grab):not(.cursor-grabbing):not(.cursor-text):not(.cursor-col-resize):not(.cursor-row-resize):not(.cursor-ew-resize):not(.cursor-ns-resize):not(.cursor-move),
+[role="menuitem"],
+[role="option"],
+[role="tab"],
+[role="link"] {
+  cursor: pointer !important;
+}
+
+button:not(:disabled) *,
+a[href] *,
+label[for] *,
+[role="button"]:not([aria-disabled="true"]) *,
+select:not(:disabled) *,
+input[type="date"]:not(:disabled) *,
+input[type="datetime-local"]:not(:disabled) *,
+input[type="time"]:not(:disabled) *,
+input[type="month"]:not(:disabled) *,
+input[type="week"]:not(:disabled) * {
+  cursor: inherit !important;
+}
+
+input[type="date"]:not(:disabled)::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]:not(:disabled)::-webkit-calendar-picker-indicator,
+input[type="time"]:not(:disabled)::-webkit-calendar-picker-indicator,
+input[type="month"]:not(:disabled)::-webkit-calendar-picker-indicator,
+input[type="week"]:not(:disabled)::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed !important;
+}
+
+button.cursor-grab,
+button.cursor-grabbing,
+[role="button"].cursor-grab {
+  cursor: grab !important;
+}
+
+button.active\:cursor-grabbing:active,
+[role="button"].active\:cursor-grabbing:active {
+  cursor: grabbing !important;
+}
+
+/* Opt-out: same !important level as global pointer (editors, resize handles, drag surfaces) */
+.cursor-text {
+  cursor: text !important;
+}
+.cursor-col-resize {
+  cursor: col-resize !important;
+}
+.cursor-row-resize {
+  cursor: row-resize !important;
+}
+.cursor-ew-resize {
+  cursor: ew-resize !important;
+}
+.cursor-ns-resize {
+  cursor: ns-resize !important;
+}
+.cursor-move {
+  cursor: move !important;
+}
+
+@utility dismiss-backdrop {
+  cursor: pointer;
+}
+
+.app-sidebar-shell {
+  width: var(--shell-sidebar-w);
+  min-width: var(--shell-sidebar-w);
+  transition:
+    width var(--appearance-duration) var(--appearance-ease),
+    min-width var(--appearance-duration) var(--appearance-ease),
+    font-size var(--appearance-duration) var(--appearance-ease),
+    --density-scale var(--appearance-duration) var(--appearance-ease);
+}
+
+/* Collapsed shell must not reserve width (utilities lose to rules above when both apply) */
+aside[data-sidebar-open="false"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+/* Full-screen call: app sidebar can sit beside or over the meeting shell */
+html[data-full-call-app-sidebar="true"] aside[data-app-sidebar][data-sidebar-open="true"] {
+  z-index: 101;
+}
+
+html[data-full-call-app-sidebar="true"] .dismiss-backdrop {
+  z-index: 100;
+}
+
+.app-header-icon-btn {
+  padding: var(--shell-header-control-padding);
+  transition:
+    padding var(--appearance-duration) var(--appearance-ease),
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.app-header-icon-btn .material-symbols-outlined {
+  font-size: var(--shell-header-icon-size);
+  transition: font-size var(--appearance-duration) var(--appearance-ease);
+}
+
+/* Shell sidebar: softer compact than dashboard (main keeps --density-scale: 0.75) */
+html.density-compact .app-sidebar-shell,
+html[data-density="compact"] .app-sidebar-shell {
+  --shell-sidebar-w: calc(18rem * 0.9);
+  --density-scale: 0.88;
+  --icon-size: 1.125rem;
+}
+
+html[data-font-size="small"] .app-sidebar-shell {
+  font-size: 14px;
+}
+
+html.density-compact[data-font-size="small"] .app-sidebar-shell [data-sidebar-nav-item] {
+  min-height: 2.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --appearance-duration: 0.01ms;
+  }
+
+  html,
+  body,
+  .app-sidebar-shell,
+  .app-header-icon-btn,
+  .app-header-icon-btn .material-symbols-outlined,
+  .material-symbols-outlined {
+    transition: none !important;
+  }
+}
+
+.dashboard-scroll-frame {
+  padding-bottom: var(--quick-taskbar-clearance);
+  transition: padding-bottom 0.2s ease;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--icon-size);
+  transition: font-size var(--appearance-duration) var(--appearance-ease);
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-highlight);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+}
+
+.theme-transition {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    padding 0.2s ease,
+    gap 0.2s ease;
+}
+
+/* text-white adapts to theme (white in dark mode, near-black in light mode) */
+.text-white {
+  color: rgb(var(--text-adaptive-white));
+}
+
+/* Light mode: hover/group-hover text emphasis */
+html.light .hover\:text-white:hover,
+html.light .group:hover .group-hover\:text-white {
+  color: rgb(var(--text-adaptive-white)) !important;
+}
+
+html.light .bg-primary .hover\:text-white:hover,
+html.light .bg-primary .group:hover .group-hover\:text-white {
+  color: rgb(255 255 255) !important;
+}
+
+html.light .homepage-root .hover\:text-white:hover,
+html.light .homepage-root .group:hover .group-hover\:text-white {
+  color: rgb(255 255 255) !important;
+}
+
+html.light .hover\:bg-white\/2:hover {
+  background-color: rgb(var(--surface-hover-rgb) / 0.02) !important;
+}
+html.light .hover\:bg-white\/5:hover {
+  background-color: rgb(var(--surface-hover-rgb) / 0.05) !important;
+}
+html.light .hover\:bg-white\/6:hover {
+  background-color: rgb(var(--surface-hover-rgb) / 0.06) !important;
+}
+html.light .hover\:bg-white\/10:hover {
+  background-color: rgb(var(--surface-hover-rgb) / 0.1) !important;
+}
+html.light .hover\:bg-white\/15:hover {
+  background-color: rgb(var(--surface-hover-rgb) / 0.15) !important;
+}
+html.light .bg-white\/5 {
+  background-color: rgb(var(--surface-hover-rgb) / 0.05) !important;
+}
+html.light .bg-white\/10 {
+  background-color: rgb(var(--surface-hover-rgb) / 0.1) !important;
+}
+html.light .border-white\/10 {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.1) !important;
+}
+html.light .border-white\/15 {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.15) !important;
+}
+
+html.light .hover\:border-white\/10:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.1) !important;
+}
+html.light .hover\:border-white\/15:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.15) !important;
+}
+html.light .hover\:border-white\/20:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.2) !important;
+}
+html.light .hover\:border-white\/25:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.25) !important;
+}
+html.light .hover\:border-white\/30:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.3) !important;
+}
+html.light .hover\:border-white\/40:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.4) !important;
+}
+html.light .hover\:border-white\/50:hover {
+  border-color: rgb(var(--border-adaptive-rgb) / 0.5) !important;
+}
+
+html.light .homepage-root .hover\:bg-white\/2:hover,
+html.light .homepage-root .hover\:bg-white\/5:hover,
+html.light .homepage-root .hover\:bg-white\/6:hover,
+html.light .homepage-root .hover\:bg-white\/10:hover,
+html.light .homepage-root .hover\:bg-white\/15:hover {
+  background-color: rgb(255 255 255 / 0.05) !important;
+}
+html.light .homepage-root .bg-white\/5,
+html.light .homepage-root .bg-white\/10 {
+  background-color: rgb(255 255 255 / 0.1) !important;
+}
+html.light .homepage-root .hover\:border-white\/10:hover {
+  border-color: rgb(255 255 255 / 0.1);
+}
+html.light .homepage-root .hover\:border-white\/15:hover {
+  border-color: rgb(255 255 255 / 0.15);
+}
+html.light .homepage-root .hover\:border-white\/20:hover {
+  border-color: rgb(255 255 255 / 0.2);
+}
+html.light .homepage-root .hover\:border-white\/25:hover {
+  border-color: rgb(255 255 255 / 0.25);
+}
+html.light .homepage-root .hover\:border-white\/30:hover {
+  border-color: rgb(255 255 255 / 0.3);
+}
+html.light .homepage-root .hover\:border-white\/40:hover {
+  border-color: rgb(255 255 255 / 0.4);
+}
+html.light .homepage-root .hover\:border-white\/50:hover {
+  border-color: rgb(255 255 255 / 0.5);
+}
+
+/* Email HTML is shown inside a sandboxed iframe (EmailBodyIframe) so provider layout/CSS apply. */
+.email-reader-frame {
+  position: relative;
+}
+
+/* ─────────────────────────────────────────────────────────
+   HOMEPAGE — ActiveTheory-Inspired Build (OneWork Branded)
+   ───────────────────────────────────────────────────────── */
+
+@property --orb-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --glow-opacity {
+  syntax: "<number>";
+  initial-value: 0;
+  inherits: false;
+}
+
+html:has(.homepage-root) {
+  scrollbar-width: none;
+  overflow-x: hidden;
+}
+html:has(.homepage-root)::-webkit-scrollbar {
+  display: none;
+}
+
+@theme {
+  --font-display: var(--font-barlow-condensed), sans-serif;
+  --font-terminal: var(--font-space-mono), monospace;
+}
+
+/* ── Homepage palette (DESIGN.md) ─────────────────────────────── */
+:root {
+  /* Biome primaries — section scroll transitions & JS */
+  --biome-primary: var(--accent-primary);
+  --biome-secondary: #ffffff;
+
+  /* Named accents → design tokens */
+  --ow-blue: var(--chart-blue);
+  --ow-purple: var(--chart-purple);
+  --ow-teal: var(--chart-teal);
+  --ow-coral: var(--chart-red);
+  --ow-brand: var(--accent-primary);
+  --ow-cyan: var(--chart-cyan);
+
+  /* Glass chrome on --bg-base */
+  --glass-border: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+  --glass-bg: color-mix(in srgb, var(--bg-surface) 40%, transparent);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --accent-rgb: 59 130 246;
+  --accent-light-rgb: 96 165 250;
+  --accent-hover-rgb: 37 99 235;
+  --chart-purple-rgb: 139 92 246;
+  --chart-teal-rgb: 20 184 166;
+  --chart-red-rgb: 239 68 68;
+  --chart-cyan-rgb: 6 182 212;
+}
+
+/* Scoped scrollbar hiding — does not affect dashboard */
+.homepage-root {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.homepage-root::-webkit-scrollbar {
+  display: none;
+}
+
+/* Heading color reset — homepage uses explicit white/inherit */
+.homepage-root h1,
+.homepage-root h2,
+.homepage-root h3,
+.homepage-root h4 {
+  color: inherit;
+}
+
+/* ── Glass Card ─────────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  filter: brightness(var(--card-brightness, 1));
+  position: relative;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 var(--glass-highlight);
+  transition:
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hover lift + glow */
+.glass-card:hover {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(var(--accent-rgb), 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+
+/* ── Glass Card Frosted → Clear hover (for Project Cards) ──── */
+.glass-card-frosted {
+  --frost-blur: 8px;
+  transition:
+    --frost-blur 0.6s ease,
+    box-shadow 0.45s ease,
+    transform 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.glass-card-frosted::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(var(--frost-blur));
+  -webkit-backdrop-filter: blur(var(--frost-blur));
+  pointer-events: none;
+  transition: backdrop-filter 0.6s ease;
+  z-index: 1;
+}
+
+.glass-card-frosted:hover::after {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* ── Nav Pill Chrome ────────────────────────────────────────── */
+.nav-pill {
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 0.5px rgba(var(--accent-rgb), 0.1);
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.nav-pill:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 32px rgba(var(--accent-rgb), 0.12),
+    0 0 0 1px rgba(var(--accent-rgb), 0.15);
+}
+
+/* ── Terminal Caret Blink ──────────────────────────────────── */
+@keyframes blink-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.terminal-caret::after {
+  content: "█";
+  animation: blink-caret 1s step-end infinite;
+  color: var(--accent-primary);
+  margin-left: 2px;
+  font-size: 0.7em;
+}
+
+/* ── Loader ────────────────────────────────────────────────── */
+
+/* Brand name text mask reveal */
+.text-mask-reveal {
+  background: linear-gradient(
+    90deg,
+    var(--ow-blue) 0%,
+    #ffffff 50%,
+    var(--ow-purple) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+}
+
+/* Typographic sphere container */
+.loader-sphere-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  perspective: 600px;
+}
+
+.loader-sphere {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: sphere-rotate 12s linear infinite;
+}
+
+@keyframes sphere-rotate {
+  from {
+    transform: rotateY(0deg) rotateX(8deg);
+  }
+  to {
+    transform: rotateY(360deg) rotateX(8deg);
+  }
+}
+
+.sphere-glyph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: var(--font-terminal);
+  font-size: 11px;
+  color: var(--ow-blue);
+  text-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Bloom tendrils erupting from sphere */
+@keyframes tendril-erupt {
+  0% {
+    transform: scale(0) translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.8) translateY(-40px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.3) translateY(-10px);
+    opacity: 0;
+  }
+}
+
+.loader-tendril {
+  position: absolute;
+  width: 3px;
+  height: 60px;
+  background: linear-gradient(to top, var(--ow-blue), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transform-origin: bottom center;
+  filter: blur(1px);
+}
+
+.loader-tendril.active {
+  animation: tendril-erupt 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Click-to-enter pulse */
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.6;
+  }
+}
+
+.click-to-enter-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  animation: pulse-ring 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Iridescent Orb ────────────────────────────────────────── */
+@keyframes orb-rotate {
+  from {
+    --orb-angle: 0deg;
+  }
+  to {
+    --orb-angle: 360deg;
+  }
+}
+
+@keyframes orb-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.92;
+  }
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 28px rgba(var(--accent-rgb), 0.12),
+      0 0 40px rgba(var(--accent-rgb), 0.1),
+      0 0 80px rgba(var(--accent-rgb), 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 36px rgba(var(--accent-rgb), 0.22),
+      0 0 56px rgba(var(--accent-rgb), 0.18),
+      0 0 100px rgba(var(--accent-light-rgb), 0.12);
+  }
+}
+
+.orb-bloom {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(var(--accent-light-rgb), 0.55) 0%,
+    rgba(var(--accent-rgb), 0.35) 42%,
+    rgba(var(--accent-hover-rgb), 0.12) 72%,
+    transparent 100%
+  );
+  filter: blur(48px) saturate(1.35) brightness(1.08);
+  border-radius: 50%;
+  animation:
+    orb-rotate 6s linear infinite,
+    orb-pulse 4s ease-in-out infinite;
+}
+
+.orb-ring {
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.02);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: orb-breathe 5s ease-in-out infinite;
+}
+
+/* Second ring layer for chromatic separation */
+.orb-ring-inner {
+  border: 1px solid rgba(var(--accent-light-rgb), 0.2);
+  border-radius: 50%;
+  background: transparent;
+  animation: orb-rotate 8s linear infinite reverse;
+}
+
+.orb-core {
+  background: conic-gradient(
+    from var(--orb-angle, 0deg),
+    rgba(var(--accent-light-rgb), 0.38),
+    rgba(var(--accent-rgb), 0.28),
+    rgba(var(--accent-hover-rgb), 0.22),
+    rgba(var(--accent-rgb), 0.3),
+    rgba(var(--accent-light-rgb), 0.38)
+  );
+  border-radius: 50%;
+  animation: orb-rotate 9s linear infinite reverse;
+  box-shadow: inset 0 0 20px rgba(var(--accent-rgb), 0.15);
+}
+
+/* Chromatic dispersion ring overlay */
+.orb-dispersion {
+  border-radius: 50%;
+  background: conic-gradient(
+    from calc(var(--orb-angle, 0deg) + 120deg),
+    rgba(var(--accent-light-rgb), 0.2),
+    rgba(var(--accent-rgb), 0.14),
+    rgba(var(--accent-hover-rgb), 0.12),
+    rgba(var(--accent-rgb), 0.14),
+    rgba(var(--accent-light-rgb), 0.2)
+  );
+  mix-blend-mode: screen;
+  animation: orb-rotate 5s linear infinite;
+  filter: blur(3px);
+}
+
+.orb-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary) 0%,
+    #ffffff 45%,
+    var(--accent-hover) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── SVG figure-8 / DNA ribbon fallback ──────────────────── */
+@keyframes ribbon-loop {
+  0% {
+    stroke-dashoffset: 2200;
+  }
+  100% {
+    stroke-dashoffset: -2200;
+  }
+}
+
+.ribbon-path {
+  stroke-dasharray: 2200;
+  animation: ribbon-loop 14s linear infinite;
+}
+
+/* ── Hero Canvas ───────────────────────────────────────────── */
+.hero-canvas-mount {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-canvas-mount canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Hero logo — in-flow slot; GSAP scroll motion targets .hero-orb-slot */
+.hero-orb-slot {
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.orb-in-slot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Section scroll animations ─────────────────────────────── */
+
+/* Word reveal with blur */
+.word-blur-reveal {
+  filter: blur(8px);
+  opacity: 0;
+  transition:
+    filter 0.6s ease,
+    opacity 0.6s ease;
+}
+
+.word-blur-reveal.revealed {
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* Glass panel expand for FAQ */
+.glass-panel-expand {
+  background: var(--glass-bg);
+  border: 1px solid rgba(var(--accent-rgb), 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.glass-panel-expand.open {
+  background: rgba(var(--accent-rgb), 0.03);
+  border-color: rgba(var(--accent-rgb), 0.15);
+}
+
+/* Glow border animation for feature cards */
+@keyframes glow-border-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.glow-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ow-blue) 25%,
+    var(--ow-purple) 50%,
+    var(--ow-teal) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glow-border:hover::after {
+  opacity: 1;
+  animation: glow-border-sweep 3s linear infinite;
+}
+
+/* ── Scroll indicator ──────────────────────────────────────── */
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ── Custom scrollbar for homepage — hidden ────────────────── */
+.homepage-root .custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Chat panel styling ────────────────────────────────────── */
+.chat-panel-link {
+  color: color-mix(in srgb, var(--accent-primary) 72%, transparent);
+  transition: color 0.2s ease;
+}
+
+.chat-panel-link:hover {
+  color: var(--accent-primary);
+}
+
+.chat-panel-heading {
+  color: var(--text-tertiary);
+}
+
+.chat-panel-link .chat-panel-arrow {
+  color: color-mix(in srgb, var(--accent-primary) 28%, transparent);
+  transition: color 0.2s ease;
+}
+
+.chat-panel-link:hover .chat-panel-arrow {
+  color: color-mix(in srgb, var(--accent-primary) 65%, transparent);
+}
+
+/* ── Comparison glow trail ─────────────────────────────────── */
+@keyframes glow-trail-in {
+  from {
+    box-shadow: -20px 0 40px rgba(var(--accent-rgb), 0.15);
+  }
+  to {
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+.comparison-glow-enter {
+  animation: glow-trail-in 1s ease-out forwards;
+}
+
+@utility icon-filled {
+  font-variation-settings: '"FILL" 1';
+}
+
+/* Billing settings — plan usage meters (<progress>, no inline width) */
+.billing-usage-progress {
+  display: block;
+  width: 100%;
+  height: 0.375rem;
+  appearance: none;
+  border: none;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--border-color);
+}
+
+.billing-usage-progress::-webkit-progress-bar {
+  background-color: var(--border-color);
+  border-radius: 9999px;
+}
+
+.billing-usage-progress::-webkit-progress-value {
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.billing-usage-progress::-moz-progress-bar {
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.billing-usage-progress--primary::-webkit-progress-value {
+  background-color: var(--accent-primary);
+}
+
+.billing-usage-progress--primary::-moz-progress-bar {
+  background-color: var(--accent-primary);
+}
+
+.billing-usage-progress--amber::-webkit-progress-value {
+  background-color: var(--status-warning);
+}
+
+.billing-usage-progress--amber::-moz-progress-bar {
+  background-color: var(--status-warning);
+}
+
+.billing-usage-progress--danger::-webkit-progress-value {
+  background-color: var(--status-danger);
+}
+
+.billing-usage-progress--danger::-moz-progress-bar {
+  background-color: var(--status-danger);
+}

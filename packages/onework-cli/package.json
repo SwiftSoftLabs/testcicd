@@ -1,0 +1,48 @@
+{
+  "name": "@swiftsoftlabs/onework-vault-cli",
+  "version": "0.1.0",
+  "description": "OneWork Vault CLI — inject Vault secrets into local processes without touching disk",
+  "license": "MIT",
+  "bin": {
+    "onework": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "pack:dry": "npm run build && npm pack --dry-run"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SwiftSoftLabs/OneWork.git",
+    "directory": "packages/onework-cli"
+  },
+  "homepage": "https://github.com/SwiftSoftLabs/OneWork/tree/main/packages/onework-cli",
+  "bugs": {
+    "url": "https://github.com/SwiftSoftLabs/OneWork/issues"
+  },
+  "keywords": [
+    "onework",
+    "vault",
+    "secrets",
+    "cli",
+    "environment",
+    "env"
+  ],
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

@@ -1,0 +1,5 @@
+livekit-agents>=1.2.0
+livekit-plugins-silero>=1.2.0
+faster-whisper>=1.1.0
+httpx>=0.28.0
+python-dotenv>=1.0.0

@@ -1,0 +1,202 @@
+{
+  "auth": {
+    "oAuthProviders": ["github", "google"],
+    "customOAuthProviders": [],
+    "requireEmailVerification": true,
+    "passwordMinLength": 6,
+    "requireNumber": false,
+    "requireLowercase": false,
+    "requireUppercase": false,
+    "requireSpecialChar": false,
+    "verifyEmailMethod": "code",
+    "resetPasswordMethod": "code"
+  },
+  "database": {
+    "tables": [
+      {
+        "tableName": "artists",
+        "recordCount": 0
+      },
+      {
+        "tableName": "connected_accounts",
+        "recordCount": 0
+      },
+      {
+        "tableName": "contact_messages",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_assets",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_audit_logs",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_campaigns",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_influencers",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_renders",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_user_profiles",
+        "recordCount": 0
+      },
+      {
+        "tableName": "deepfluence_veto_decisions",
+        "recordCount": 0
+      },
+      {
+        "tableName": "gigs",
+        "recordCount": 0
+      },
+      {
+        "tableName": "memberships",
+        "recordCount": 0
+      },
+      {
+        "tableName": "offers",
+        "recordCount": 0
+      },
+      {
+        "tableName": "profiles",
+        "recordCount": 0
+      },
+      {
+        "tableName": "rescued_emails",
+        "recordCount": 0
+      },
+      {
+        "tableName": "reviews",
+        "recordCount": 0
+      },
+      {
+        "tableName": "settlements",
+        "recordCount": 0
+      },
+      {
+        "tableName": "track_records",
+        "recordCount": 0
+      },
+      {
+        "tableName": "user_settings",
+        "recordCount": 0
+      },
+      {
+        "tableName": "venues",
+        "recordCount": 0
+      }
+    ],
+    "totalSizeInGB": 0.024548335932195187,
+    "hint": "To retrieve detailed schema information for a specific table, call the get-table-schema tool with the table name."
+  },
+  "storage": {
+    "buckets": [
+      {
+        "name": "agentzero-avatars",
+        "public": true,
+        "createdAt": "2026-04-25T18:35:45.838Z",
+        "objectCount": 0
+      },
+      {
+        "name": "agentzero-listings",
+        "public": true,
+        "createdAt": "2026-04-25T18:35:41.855Z",
+        "objectCount": 0
+      },
+      {
+        "name": "app_growflowcommand_content-images",
+        "public": true,
+        "createdAt": "2026-04-25T07:01:57.117Z",
+        "objectCount": 0
+      },
+      {
+        "name": "asset-images",
+        "public": true,
+        "createdAt": "2026-04-25T05:28:16.159Z",
+        "objectCount": 0
+      },
+      {
+        "name": "continuum-docs",
+        "public": true,
+        "createdAt": "2026-04-27T07:01:46.157Z",
+        "objectCount": 0
+      },
+      {
+        "name": "earnfluence-avatars",
+        "public": true,
+        "createdAt": "2026-04-25T18:37:56.638Z",
+        "objectCount": 0
+      },
+      {
+        "name": "earnfluence-uploads",
+        "public": true,
+        "createdAt": "2026-04-25T18:38:00.418Z",
+        "objectCount": 0
+      }
+    ],
+    "totalSizeInGB": 0
+  },
+  "functions": [
+    {
+      "slug": "generate-content",
+      "name": "generate-content",
+      "description": "",
+      "status": "active"
+    },
+    {
+      "slug": "auth-claim",
+      "name": "auth-claim",
+      "description": null,
+      "status": "active"
+    },
+    {
+      "slug": "auth-signup",
+      "name": "auth-signup",
+      "description": "",
+      "status": "active"
+    }
+  ],
+  "aiIntegration": {
+    "models": [
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text"],
+        "modelId": "deepseek/deepseek-v3.2"
+      },
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text"],
+        "modelId": "minimax/minimax-m2.1"
+      },
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text"],
+        "modelId": "x-ai/grok-4.1-fast"
+      },
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text"],
+        "modelId": "anthropic/claude-sonnet-4.5"
+      },
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text"],
+        "modelId": "openai/gpt-4o-mini"
+      },
+      {
+        "inputModality": ["text", "image"],
+        "outputModality": ["text", "image"],
+        "modelId": "google/gemini-3-pro-image-preview"
+      }
+    ]
+  },
+  "version": "1.0.0"
+}

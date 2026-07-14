@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "getmarketinghomepagepublicaccess",
+    "description": "Verify that a GET request to the root path / returns a 200 HTML page for the public marketing homepage without requiring authentication."
+  },
+  {
+    "id": "TC002",
+    "title": "getloginpageauthenticationoptions",
+    "description": "Verify that a GET request to /login returns a 200 HTML login page with email/password and passkey login options, accessible without authentication."
+  },
+  {
+    "id": "TC003",
+    "title": "getsignuppageregistrationflow",
+    "description": "Verify that a GET request to /signup returns a 200 HTML signup page for new user registration without requiring authentication."
+  },
+  {
+    "id": "TC004",
+    "title": "getverifyemailstatuspage",
+    "description": "Verify that a GET request to /verify-email returns a 200 HTML email verification status page accessible without authentication."
+  },
+  {
+    "id": "TC005",
+    "title": "getdashboardauthenticatedaccess",
+    "description": "Verify that a GET request to /dashboard with a valid authenticated session returns a 200 HTML dashboard page with widgets and sidebar navigation, and without valid session returns 401 or redirect to login."
+  },
+  {
+    "id": "TC006",
+    "title": "gettasksboardanddeeplinkmodal",
+    "description": "Verify that a GET request to /tasks with valid authentication returns a 200 HTML task board page, and that accessing /tasks with valid projectId and open taskUuid query parameters opens the task detail modal correctly; invalid parameters show error or no modal."
+  },
+  {
+    "id": "TC007",
+    "title": "getchatinterfaceauthenticatedaccess",
+    "description": "Verify that a GET request to /chat with valid authentication returns a 200 HTML chat interface with conversations and message threads, and without valid session returns 401 or redirect to login."
+  },
+  {
+    "id": "TC008",
+    "title": "getcallslistandroomaccess",
+    "description": "Verify that a GET request to /calls with valid authentication returns a 200 HTML calls list and scheduling interface, and that accessing /calls/{id}/room with valid session and permissions returns a 200 HTML LiveKit call room page; invalid permissions or missing LiveKit server returns error state."
+  },
+  {
+    "id": "TC009",
+    "title": "getcalendarviewwithintegrations",
+    "description": "Verify that a GET request to /calendar with valid authentication returns a 200 HTML calendar view with events, and that missing or unavailable integrations show empty or error states; without valid session returns 401 or redirect."
+  },
+  {
+    "id": "TC010",
+    "title": "getemailinboxandcomposepages",
+    "description": "Verify that GET requests to /email and /email/compose with valid authentication return 200 HTML pages for inbox listing and compose email respectively, and that without valid session returns 401 or redirect to login."
+  }
+]
